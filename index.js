@@ -20,7 +20,8 @@ server.route({
     handler: function (request, reply) {
         console.log(`Received a request from ${request.params.name} to join`);
         var changes = [];
-        var changeHandler = new joinReplyContract(reply);
+        debugger; 
+        var changeHandler = new JoinReplyContract(reply);
         const character = new Character(request.params.name);
 
         console.log("Attempting to find a game to join");

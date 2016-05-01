@@ -1,8 +1,10 @@
+const UUID = require('uuid');
 const CharacterJoined = require('./changes/CharacterJoined.js');
 const JoiningError = require('./changes/JoiningError.js');
 
 module.exports = class Game {
     constructor(characters = []) {
+        this.id = UUID.v4();
         this.characters = characters;
     }
 

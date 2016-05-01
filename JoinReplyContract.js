@@ -1,6 +1,6 @@
 const Boom = require('boom');
 
-module.export = class JoinReplyContract {
+module.exports= class JoinReplyContract {
     constructor(reply) {
         this.reply = reply;
     }

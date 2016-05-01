@@ -11,7 +11,8 @@
   "license": "GPLv3",
   "dependencies": {
     "boom": "^3.1.2",
-    "hapi": "~13.3.0"
+    "hapi": "~13.3.0",
+    "uuid": "^2.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
