@@ -6,6 +6,7 @@ const JoiningError = require('./changes/JoiningError.js');
 const JoinReplyContract = require('./JoinReplyContract.js');
 
 const Hapi = require('hapi');
+const Joi = require('joi');
 const server = new Hapi.Server();
 server.connection({ port: 3000 });
 
@@ -13,16 +14,16 @@ server.connection({ port: 3000 });
 
 server.route({
     method: 'POST',
-    path: '/join/{name}',
+    path: '/game/join',
     /*
      *Do not use fat arrow syntax as they do not allow context binding!
      * */
     handler: function (request, reply) {
-        console.log(`Received a request from ${request.params.name} to join`);
+        console.log(`Received a request from ${request.payload.name} to join`);
         var changes = [];
         debugger; 
         var changeHandler = new JoinReplyContract(reply);
-        const character = new Character(request.params.name);
+        const character = new Character(request.payload.name);
 
         console.log("Attempting to find a game to join");
         const game = GameRepository.latest;
@@ -34,6 +35,13 @@ server.route({
         GameRepository.apply(changes);
         console.log("Applying the changes to the endpoint's handler");
         changeHandler.apply(changes);
+    },
+    config: {
+        validate: {
+            payload: {
+                name: Joi.string().min(3).max(10)
+            }
+        }
     }
 });
 
