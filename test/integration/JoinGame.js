@@ -14,23 +14,20 @@ describe('Join a game', function() {
         theGame.inject({
             method: 'DELETE',
             url: `/game/${gameIdWithBob}`
-        }, function(response) {
+        }).then(function(response) {
             expect(response.statusCode).to.equal(200);
             console.log(`Deleted game with Bob: ${gameIdWithBob}`);
 
-            theGame.inject({
+            return theGame.inject({
                 method:'DELETE',
                 url: `/game/${gameIdWithAlice}`
-            }, function(response) {
-                expect(response.statusCode).to.equal(200);
-                console.log(`Deleted game with Alice: ${gameIdWithAlice}`);     
-                console.log('Shutting down the Game');
-                theGame.stop({ timeout: 5 * 1000 }, function() {
-                    console.log('Game shut down');
-                    done();
-                });
             });
-        });
+        }).then(function(response) {
+            expect(response.statusCode).to.equal(200);
+            console.log(`Deleted game with Alice: ${gameIdWithAlice}`);
+            console.log('Shutting down the Game');
+            return theGame.stop({ timeout: 5 * 1000 });
+        }).then(done);
     });
     it('should have a defined interface', function(done) {
         theGame.inject({
@@ -71,7 +68,7 @@ describe('Join a game', function() {
         }, (response) => {
             expect(response.statusCode).to.equal(200);
             expect(response.payload).to.not.equal(gameIdWithBob);
-            gameIdWithAlice = response.payload; 
+            gameIdWithAlice = response.payload;
             done();
         });
     });
