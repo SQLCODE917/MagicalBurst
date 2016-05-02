@@ -29,15 +29,21 @@ module.exports = class GameRepository {
     }
 
     static save(game) {
-        const thisGameIndex = findGameById(game);
+        const thisGameIndex = this.findById(game.id);
         if (thisGameIndex) {
             allGames.splice(thisGameIndex, 1, game);
         } else {
             allGames.push(game);
         }
+    }
 
-        function findGameById(game) {
-            return allGames.find(existingGame => existingGame.id === game.id);
+    static findById(id) {
+        const gameIndex = allGames.find(game => game.id === id);
+        console.log(gameIndex);
+        if (gameIndex) {
+            return allGames[gameIndex];
+        } else {
+            return false;
         }
     }
 

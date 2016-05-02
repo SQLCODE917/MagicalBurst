@@ -7,8 +7,7 @@ const expect = chai.expect;
  * You just lost
  */
 const theGame = require('../../index.js');
-
-describe('Join a game', function() {
+describe('Join a game by ID', function() {
     let gameIdWithBob, gameIdWithAlice;
     after(function(done) {
         theGame.inject({
@@ -23,8 +22,54 @@ describe('Join a game', function() {
             });
         }).then(function(response) {
             expect(response.statusCode).to.equal(200);
-            return theGame.stop({ timeout: 5 * 1000 });
-        }).then(done);
+            done();
+        });
+    });
+    it('should have a defined interface', function(done){
+        theGame.inject({
+            method: 'POST',
+            url: '/game/join',
+            payload: {
+                name: 'Bob'
+            }
+        }).then(function (response) {
+            expect(response.statusCode).to.equal(200);
+            Joi.assert(response.payload, Joi.string().guid());
+            gameIdWithBob = response.payload;
+            return theGame.inject({
+                method: 'POST',
+                url: `/game/${gameIdWithBob}/join`,
+                payload: {
+                    name: 'Alice'
+                }
+            });
+        }).then(function (response){
+            expect(response.statusCode).to.equal(200);
+            Joi.assert(response.payload, Joi.string().guid());
+            expect(response.payload).to.not.equal(gameIdWithBob);
+            gameIdWithAlice = response.payload;
+            done();
+        });
+    });
+});
+
+describe('Join the latest game', function() {
+    let gameIdWithBob, gameIdWithAlice;
+    after(function(done) {
+        theGame.inject({
+            method: 'DELETE',
+            url: `/game/${gameIdWithBob}`
+        }).then(function(response) {
+            expect(response.statusCode).to.equal(200);
+
+            return theGame.inject({
+                method:'DELETE',
+                url: `/game/${gameIdWithAlice}`
+            });
+        }).then(function(response) {
+            expect(response.statusCode).to.equal(200);
+            done();
+        });
     });
     it('should have a defined interface', function(done) {
         theGame.inject({
