@@ -1,8 +1,8 @@
 const Character = require('./Character.js');
-const CharacterJoined = require('./changes/CharacterJoined.js');
+const DeleteGame = require('./changes/DeleteGame.js');
+const DeleteReplyContract = require('./DeleteReplyContract.js');
 const Game = require('./Game.js');
 const GameRepository = require('./GameRepository.js');
-const JoiningError = require('./changes/JoiningError.js');
 const JoinReplyContract = require('./JoinReplyContract.js');
 
 const Hapi = require('hapi');
@@ -21,7 +21,6 @@ server.route({
     handler: function (request, reply) {
         console.log(`Received a request from ${request.payload.name} to join`);
         var changes = [];
-        debugger; 
         var changeHandler = new JoinReplyContract(reply);
         const character = new Character(request.payload.name);
 
@@ -45,6 +44,20 @@ server.route({
     }
 });
 
+server.route({
+    method: 'DELETE',
+    path: '/game/{id}',
+    handler: function (request, reply) {
+        console.log(`Received a request to delete game ${request.params.id}`);
+        const changeHandler = new DeleteReplyContract(reply);
+        var changes = [new DeleteGame(request.params.id)]; 
+        console.log("Applying the changes to the Game Repository");
+        GameRepository.apply(changes);
+        console.log("Applying the changes to the endpoint's handler");
+        changeHandler.apply(changes);
+    }
+});
+
 server.start((err) => {
     if (err) {
         throw err;
@@ -52,3 +65,8 @@ server.start((err) => {
 
     console.log('Server running at:' + server.info.uri);
 });
+
+/*
+ * Export for integration testing
+ */
+module.exports = server;

@@ -57,6 +57,7 @@ module.exports = class GameRepository {
             return allGames.find(existingGame => existingGame.id === game.id);
         }
     }
+
     static character_joined(change) {
         console.log("A character had joined a game - going to save the change");
         this.save(change.game)
@@ -64,6 +65,12 @@ module.exports = class GameRepository {
 
     static joining_error(change) {
         console.log("There has been an error joining a game - nothing to do here");
+    }
+
+
+    static delete_game(change) {
+        console.log("A game is going to be deleted");
+        this.delete(change.id);
     }
 
     static apply(changes) {

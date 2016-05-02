@@ -7,7 +7,8 @@ module.exports= class JoinReplyContract {
 
     character_joined(change) {
         console.log("Successfully joined a game! Letting the user know.");
-        return this.reply("Success");
+        console.log("The Game ID", change.game.id, "Type", typeof change.game.id);
+        return this.reply(change.game.id);
     }
 
     joining_error(change) {
