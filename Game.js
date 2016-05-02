@@ -10,15 +10,11 @@ module.exports = class Game {
 
     join(character, changes) {
         if( this.hasCharacterWithName(character.name) ) {
-            console.log(`A character with the same name already exists in the given game, adding an error`);
             changes.push(new JoiningError("A Character with that name already exists"));
         } else {
-            console.log(`No character with that name exists - adding`);
-            this.characters.push(character);
-            console.log("The character roster will be updated with the following:");
-            this.characters.forEach(character => console.log(`\t${character.name}`));
-            const game = new Game(this.characters);
-            console.log("Games are immutable - creating a clone with the new roster", game);
+            const cloneCharacters = this.characters.slice();
+            cloneCharacters.push(character);
+            const game = new Game(cloneCharacters);
             changes.push(new CharacterJoined(game));
         }
         return changes;

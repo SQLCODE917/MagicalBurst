@@ -16,7 +16,6 @@ describe('Join a game', function() {
             url: `/game/${gameIdWithBob}`
         }).then(function(response) {
             expect(response.statusCode).to.equal(200);
-            console.log(`Deleted game with Bob: ${gameIdWithBob}`);
 
             return theGame.inject({
                 method:'DELETE',
@@ -24,8 +23,6 @@ describe('Join a game', function() {
             });
         }).then(function(response) {
             expect(response.statusCode).to.equal(200);
-            console.log(`Deleted game with Alice: ${gameIdWithAlice}`);
-            console.log('Shutting down the Game');
             return theGame.stop({ timeout: 5 * 1000 });
         }).then(done);
     });

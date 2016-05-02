@@ -6,11 +6,10 @@ module.exports= class DeleteReplyContract {
     }
 
     delete_game(change) {
-        console.log("Successfully deleted a game! Letting the user know.");
         return this.reply("Success");
     }
 
     apply(changes) {
-        changes.forEach( change => change.effect(this) ); 
+        changes.forEach( change => change.effect(this) );
     }
 }
