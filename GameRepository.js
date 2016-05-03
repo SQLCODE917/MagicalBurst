@@ -20,8 +20,8 @@ module.exports = class GameRepository {
     }
 
     static delete(id) {
-        const gameIndex = allGames.find(game => game.id === id);
-        if (gameIndex) {
+        const gameIndex = allGames.findIndex(game => game.id === id);
+        if (gameIndex !== -1) {
             allGames.splice(gameIndex, 1);
         } else {
             console.log('No game found, nothing to do');
@@ -29,8 +29,8 @@ module.exports = class GameRepository {
     }
 
     static save(game) {
-        const thisGameIndex = this.findById(game.id);
-        if (thisGameIndex) {
+        const thisGameIndex = allGames.findIndex(existingGame => existingGame.id === game.id);
+        if (thisGameIndex !== -1) {
             allGames.splice(thisGameIndex, 1, game);
         } else {
             allGames.push(game);
@@ -38,9 +38,8 @@ module.exports = class GameRepository {
     }
 
     static findById(id) {
-        const gameIndex = allGames.find(game => game.id === id);
-        console.log(gameIndex);
-        if (gameIndex) {
+        const gameIndex = allGames.findIndex(game => game.id === id);
+        if (gameIndex !== -1) {
             return allGames[gameIndex];
         } else {
             return false;

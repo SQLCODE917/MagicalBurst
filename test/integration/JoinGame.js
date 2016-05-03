@@ -49,6 +49,20 @@ describe('Join a game by ID', function() {
             expect(response.payload).to.not.equal(gameIdWithBob);
             gameIdWithAlice = response.payload;
             done();
+        }).catch(done);
+    });
+
+    it('should not only allow unique player names', function(done) {
+        theGame.inject({
+            method: 'POST',
+            url: `/game/${gameIdWithAlice}/join`,
+            payload: {
+                name: 'Alice'
+            }
+        }).then(function (response) {
+            expect(response.statusCode).to.equal(422);
+            expect(response.result.message).to.equal("A Character with that name already exists");
+            done();
         });
     });
 });
