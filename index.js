@@ -5,6 +5,7 @@ const Game = require('./Game.js');
 const GameRepository = require('./GameRepository.js');
 const JoiningError = require('./changes/JoiningError.js');
 const JoinReplyContract = require('./JoinReplyContract.js');
+const UnhandledError= require('./changes/UnhandledError.js');
 
 const M = require('./util/M.js');
 const Env = require('./util/Env.js');
@@ -56,6 +57,9 @@ server.route({
         }
         function failure (error, operation, input, nextStep) {
             console.log("Internal Server Error", error);
+            const changeHandler = new JoinReplyContract(reply);
+            const changes = [new UnhandledError()];
+            changeHandler.apply(changes);
         }
 /*
         var changes = [];

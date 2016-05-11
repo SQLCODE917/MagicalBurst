@@ -13,6 +13,10 @@ module.exports= class JoinReplyContract {
         return this.reply(Boom.badData(change.message));
     }
 
+    unhandled_error(change) {
+        return this.reply(Boom.badImplementation());
+    }
+
     apply(changes) {
         changes.forEach( change => change.effect(this) );
     }
